@@ -35,7 +35,7 @@ import shared.FixedIterationTrainer;
  */
 public class NQueensTest {
     /** The n value */
-    private static final int N = 10;
+    private static final int N = 500;
     /** The t value */
     
     public static void main(String[] args) {
@@ -55,46 +55,68 @@ public class NQueensTest {
         ProbabilisticOptimizationProblem pop = new GenericProbabilisticOptimizationProblem(ef, odd, df);
         
         RandomizedHillClimbing rhc = new RandomizedHillClimbing(hcp);      
-        FixedIterationTrainer fit = new FixedIterationTrainer(rhc, 100);
+        FixedIterationTrainer fit = new FixedIterationTrainer(rhc, 1000);
         fit.train();
         long starttime = System.currentTimeMillis();
         System.out.println("RHC: " + ef.value(rhc.getOptimal()));
         System.out.println("RHC: Board Position: ");
-       // System.out.println(ef.boardPositions());
+//        System.out.println(ef.boardPositions());
         System.out.println("Time : "+ (System.currentTimeMillis() - starttime));
         
         System.out.println("============================");
         
-        SimulatedAnnealing sa = new SimulatedAnnealing(1E1, .1, hcp);
-        fit = new FixedIterationTrainer(sa, 100);
-        fit.train();
+//        SimulatedAnnealing sa = new SimulatedAnnealing(1E1, .1, hcp);
+//        fit = new FixedIterationTrainer(sa, 1000);
+//        fit.train();
+//        
+//        starttime = System.currentTimeMillis();
+//        System.out.println("SA: " + ef.value(sa.getOptimal()));
+//        System.out.println("SA: Board Position: ");
+////        System.out.println(ef.boardPositions());
+//        System.out.println("Time : "+ (System.currentTimeMillis() - starttime));
+//        
+//        System.out.println("============================");
         
-        starttime = System.currentTimeMillis();
-        System.out.println("SA: " + ef.value(sa.getOptimal()));
-        System.out.println("SA: Board Position: ");
-       // System.out.println(ef.boardPositions());
-        System.out.println("Time : "+ (System.currentTimeMillis() - starttime));
+        double coolingList[] = {.9, .75, .50, .25, .1, .05};
+        double tempList[] = {1e5, 1e4, 1e3, 1e2, 1e1, 0.5};
         
-        System.out.println("============================");
+        for (double t: tempList) {
+	        for(double c: coolingList) {
+//	        	System.out.println("Starting Temp: " + t);
+//	        	System.out.println("Cooling exp: " + c);
+	        	SimulatedAnnealing sa = new SimulatedAnnealing(t, c, hcp);
+	            fit = new FixedIterationTrainer(sa, 1000);
+	            fit.train();
+	            
+//	            starttime = System.currentTimeMillis();
+	            System.out.println(t + ", " + c + ", " + ef.value(sa.getOptimal()));
+//	            System.out.println("SA: " + ef.value(sa.getOptimal()));
+//	            System.out.println("SA: Board Position: ");
+	//            System.out.println(ef.boardPositions());
+//	            System.out.println("Time : "+ (System.currentTimeMillis() - starttime));
+	            
+//	            System.out.println("============================");
+	        }
+        }
         
-        starttime = System.currentTimeMillis();
-        StandardGeneticAlgorithm ga = new StandardGeneticAlgorithm(200, 0, 10, gap);
-        fit = new FixedIterationTrainer(ga, 100);
-        fit.train();
-        System.out.println("GA: " + ef.value(ga.getOptimal()));
-        System.out.println("GA: Board Position: ");
-        //System.out.println(ef.boardPositions());
-        System.out.println("Time : "+ (System.currentTimeMillis() - starttime));
-        
-        System.out.println("============================");
-        
-        starttime = System.currentTimeMillis();
-        MIMIC mimic = new MIMIC(200, 10, pop);
-        fit = new FixedIterationTrainer(mimic, 5);
-        fit.train();
-        System.out.println("MIMIC: " + ef.value(mimic.getOptimal()));
-        System.out.println("MIMIC: Board Position: ");
-        //System.out.println(ef.boardPositions());
-        System.out.println("Time : "+ (System.currentTimeMillis() - starttime));
+//        starttime = System.currentTimeMillis();
+//        StandardGeneticAlgorithm ga = new StandardGeneticAlgorithm(200, 0, 10, gap);
+//        fit = new FixedIterationTrainer(ga, 100);
+//        fit.train();
+//        System.out.println("GA: " + ef.value(ga.getOptimal()));
+//        System.out.println("GA: Board Position: ");
+////        System.out.println(ef.boardPositions());
+//        System.out.println("Time : "+ (System.currentTimeMillis() - starttime));
+//        
+//        System.out.println("============================");
+//        
+//        starttime = System.currentTimeMillis();
+//        MIMIC mimic = new MIMIC(200, 10, pop);
+//        fit = new FixedIterationTrainer(mimic, 5);
+//        fit.train();
+//        System.out.println("MIMIC: " + ef.value(mimic.getOptimal()));
+//        System.out.println("MIMIC: Board Position: ");
+////        System.out.println(ef.boardPositions());
+//        System.out.println("Time : "+ (System.currentTimeMillis() - starttime));
     }
 }

@@ -76,30 +76,39 @@ public class KnapsackTest {
         MutationFunction mf = new DiscreteChangeOneMutation(ranges);
         CrossoverFunction cf = new UniformCrossOver();
         Distribution df = new DiscreteDependencyTree(.1, ranges);
-
+//
         HillClimbingProblem hcp = new GenericHillClimbingProblem(ef, odd, nf);
         GeneticAlgorithmProblem gap = new GenericGeneticAlgorithmProblem(ef, odd, mf, cf);
         ProbabilisticOptimizationProblem pop = new GenericProbabilisticOptimizationProblem(ef, odd, df);
-        
+//        
         RandomizedHillClimbing rhc = new RandomizedHillClimbing(hcp);      
         FixedIterationTrainer fit = new FixedIterationTrainer(rhc, 200000);
         fit.train();
-        System.out.println(ef.value(rhc.getOptimal()));
+//        System.out.println(ef.value(rhc.getOptimal()));
+//        
+//        SimulatedAnnealing sa = new SimulatedAnnealing(100, .95, hcp);
+//        fit = new FixedIterationTrainer(sa, 200000);
+//        fit.train();
+//        System.out.println(ef.value(sa.getOptimal()));
+//        
+//        StandardGeneticAlgorithm ga = new StandardGeneticAlgorithm(200, 150, 25, gap);
+//        fit = new FixedIterationTrainer(ga, 1000);
+//        fit.train();
+//        System.out.println(ef.value(ga.getOptimal()));
         
-        SimulatedAnnealing sa = new SimulatedAnnealing(100, .95, hcp);
-        fit = new FixedIterationTrainer(sa, 200000);
-        fit.train();
-        System.out.println(ef.value(sa.getOptimal()));
-        
-        StandardGeneticAlgorithm ga = new StandardGeneticAlgorithm(200, 150, 25, gap);
-        fit = new FixedIterationTrainer(ga, 1000);
-        fit.train();
-        System.out.println(ef.value(ga.getOptimal()));
-        
-        MIMIC mimic = new MIMIC(200, 100, pop);
-        fit = new FixedIterationTrainer(mimic, 1000);
-        fit.train();
-        System.out.println(ef.value(mimic.getOptimal()));
+        int keeplist[] = {190, 150, 100, 70, 50, 20, 10};
+        int popSize[] = {500, 400, 300, 200, 100, 50};
+        for(int i = 0; i <= 1000; i += 100) {
+        	StandardGeneticAlgorithm ga = new StandardGeneticAlgorithm(200, 100, 25 , gap);
+            fit = new FixedIterationTrainer(ga, i);
+            fit.train();
+        	
+        	 MIMIC mimic = new MIMIC(200, 100, pop);
+             fit = new FixedIterationTrainer(mimic, i);
+             fit.train();
+             System.out.println(i + ", " + ef.value(ga.getOptimal()) + ", " + ef.value(mimic.getOptimal()));
+        }
+       
     }
 
 }

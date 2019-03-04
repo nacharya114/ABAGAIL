@@ -33,7 +33,7 @@ import shared.FixedIterationTrainer;
  */
 public class TravelingSalesmanTest {
     /** The n value */
-    private static final int N = 50;
+    private static final int N = 500;
     /**
      * The test main
      * @param args ignored
@@ -54,34 +54,44 @@ public class TravelingSalesmanTest {
         CrossoverFunction cf = new TravelingSalesmanCrossOver(ef);
         HillClimbingProblem hcp = new GenericHillClimbingProblem(ef, odd, nf);
         GeneticAlgorithmProblem gap = new GenericGeneticAlgorithmProblem(ef, odd, mf, cf);
+//        
+//        RandomizedHillClimbing rhc = new RandomizedHillClimbing(hcp);      
+//        FixedIterationTrainer fit = new FixedIterationTrainer(rhc, 200000);
+//        fit.train();
+//        System.out.println(ef.value(rhc.getOptimal()));
+//        
+//        SimulatedAnnealing sa = new SimulatedAnnealing(1E12, .95, hcp);
+//        fit = new FixedIterationTrainer(sa, 200000);
+//        fit.train();
+//        System.out.println(ef.value(sa.getOptimal()));
         
-        RandomizedHillClimbing rhc = new RandomizedHillClimbing(hcp);      
-        FixedIterationTrainer fit = new FixedIterationTrainer(rhc, 200000);
-        fit.train();
-        System.out.println(ef.value(rhc.getOptimal()));
+        int keepList[] = {190, 150, 100, 70, 50, 20, 10};
+        for(int i: keepList) {
+        	long starttime = System.currentTimeMillis();
+//        	System.out.println(i);
+        	StandardGeneticAlgorithm ga = new StandardGeneticAlgorithm(200, i, 20, gap);
+        	FixedIterationTrainer fit = new FixedIterationTrainer(ga, 1000);
+            fit.train();
+            
+            long elapsed = System.currentTimeMillis() - starttime;
+//            System.out.println("Time elapsed: " + elapsed);
+            System.out.println(i + ", " + ef.value(ga.getOptimal()) + ", " + elapsed);
+        }
         
-        SimulatedAnnealing sa = new SimulatedAnnealing(1E12, .95, hcp);
-        fit = new FixedIterationTrainer(sa, 200000);
-        fit.train();
-        System.out.println(ef.value(sa.getOptimal()));
         
-        StandardGeneticAlgorithm ga = new StandardGeneticAlgorithm(200, 150, 20, gap);
-        fit = new FixedIterationTrainer(ga, 1000);
-        fit.train();
-        System.out.println(ef.value(ga.getOptimal()));
         
         // for mimic we use a sort encoding
-        ef = new TravelingSalesmanSortEvaluationFunction(points);
-        int[] ranges = new int[N];
-        Arrays.fill(ranges, N);
-        odd = new  DiscreteUniformDistribution(ranges);
-        Distribution df = new DiscreteDependencyTree(.1, ranges); 
-        ProbabilisticOptimizationProblem pop = new GenericProbabilisticOptimizationProblem(ef, odd, df);
-        
-        MIMIC mimic = new MIMIC(200, 100, pop);
-        fit = new FixedIterationTrainer(mimic, 1000);
-        fit.train();
-        System.out.println(ef.value(mimic.getOptimal()));
+//        ef = new TravelingSalesmanSortEvaluationFunction(points);
+//        int[] ranges = new int[N];
+//        Arrays.fill(ranges, N);
+//        odd = new  DiscreteUniformDistribution(ranges);
+//        Distribution df = new DiscreteDependencyTree(.1, ranges); 
+//        ProbabilisticOptimizationProblem pop = new GenericProbabilisticOptimizationProblem(ef, odd, df);
+//        
+//        MIMIC mimic = new MIMIC(200, 100, pop);
+//        fit = new FixedIterationTrainer(mimic, 1000);
+//        fit.train();
+//        System.out.println(ef.value(mimic.getOptimal()));
         
     }
 }
